@@ -1,3 +1,4 @@
 component=shipping
-source=common.sh
+source common.sh
+
 func_java
