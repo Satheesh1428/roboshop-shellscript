@@ -1,3 +1,3 @@
 component=shipping
 source=common.sh
-func-java
+func_java
