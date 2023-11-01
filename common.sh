@@ -1,8 +1,8 @@
 log=/tmp/roboshop.log
 func_apppreq() {
-  echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create ${component} service file <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
+    echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create ${component} service file <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
     cp ${component}.service   /etc/systemd/system/${component}.service &>>${log}
-  echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create application user <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
+    echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create application user <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
     useradd roboshop &>>${log}
     echo  -e "\e[36m>>>>>>>>>>>>>>>>>>clean up existing application content <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
     rm -rf /app &>>${log}
@@ -24,14 +24,14 @@ func_systemd() {
     systemctl restart ${component} &>>${log}
 }
 func_nodejs() {
-    echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create mongodb repo <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
+  echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create mongodb repo <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
   cp mongo.repo   /etc/yum.repos.d/mongo.repo &>>${log}
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>install nodejs repos <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
   curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>${log}
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>install nodejs  <<<<<<<<<<<<<\e[0m"  | tee  -a ${log}
   yum install nodejs -y &>>${log}
   func_apppreq
-    echo  -e "\e[36m>>>>>>>>>>>>>>>>>>download nodejs dependencies <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
+  echo  -e "\e[36m>>>>>>>>>>>>>>>>>>download nodejs dependencies <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
   npm install &>>${log}
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>install mongo client <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
   yum install mongodb-org-shell -y &>>${log}
