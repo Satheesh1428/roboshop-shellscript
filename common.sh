@@ -3,7 +3,7 @@ func_apppreq() {
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create application user <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
     useradd roboshop &>>${log}
     echo  -e "\e[36m>>>>>>>>>>>>>>>>>>clean up existing application content <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
-    rm -rf /app &>>${log} &>>${log}
+    rm -rf /app &>>${log}
     echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create application directory <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
     mkdir /app &>>${log}
     echo  -e "\e[36m>>>>>>>>>>>>>>>>>>download application content  <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
@@ -49,7 +49,7 @@ func_java() {
 
   func_apppreq
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>Build ${component} service <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
-  mvn clean package
+  mvn clean package &>>${log}
   mv target/${component}-1.0.jar ${component}.jar &>>${log}
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>install mysql client <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
   yum install mysql -y &>>${log}
