@@ -31,7 +31,7 @@ func_nodejs() {
   curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>${log}
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>install nodejs  <<<<<<<<<<<<<\e[0m"  | tee  -a ${log}
   yum install nodejs -y &>>${log}
-  func_apprpreq
+  func_apppreq
     echo  -e "\e[36m>>>>>>>>>>>>>>>>>>download nodejs dependencies <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
   npm install &>>${log}
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>install mongo client <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
