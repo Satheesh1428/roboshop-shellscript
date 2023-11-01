@@ -1,3 +1,4 @@
+log=/tmp/roboshop.log
 func_apppreq() {
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create application user <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
     useradd roboshop &>>${log}
@@ -42,17 +43,17 @@ func_nodejs() {
 
 func_java() {
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create ${component} service file <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
-  cp ${component}.service   /etc/systemd/system/${component}.service
+  cp ${component}.service   /etc/systemd/system/${component}.service &>>${log}
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>Install Maven <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
-  yum install maven -y
+  yum install maven -y &>>${log}
 
   func_apppreq
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>Build ${component} service <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
   mvn clean package
-  mv target/${component}-1.0.jar ${component}.jar
+  mv target/${component}-1.0.jar ${component}.jar &>>${log}
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>install mysql client <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
-  yum install mysql -y
+  yum install mysql -y &>>${log}
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>load schema <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
-  mysql -h mysql.devopsovsn.online -uroot -pRoboShop@1 < /app/schema/${component}.sql
+  mysql -h mysql.devopsovsn.online -uroot -pRoboShop@1 < /app/schema/${component}.sql &>>${log}
   func_systemd
   }
