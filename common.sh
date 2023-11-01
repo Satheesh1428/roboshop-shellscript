@@ -1,5 +1,7 @@
 log=/tmp/roboshop.log
 func_apppreq() {
+  echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create ${component} service file <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
+    cp ${component}.service   /etc/systemd/system/${component}.service &>>${log}
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create application user <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
     useradd roboshop &>>${log}
     echo  -e "\e[36m>>>>>>>>>>>>>>>>>>clean up existing application content <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
@@ -22,10 +24,7 @@ func_systemd() {
     systemctl restart ${component} &>>${log}
 }
 func_nodejs() {
-  log=/tmp/roboshop.log
-  echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create ${component} service file <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
-  cp ${component}.service  /etc/systemd/system/${component}.service &>>${log}
-  echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create mongodb repo <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
+    echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create mongodb repo <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
   cp mongo.repo   /etc/yum.repos.d/mongo.repo &>>${log}
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>install nodejs repos <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
   curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>${log}
@@ -42,8 +41,7 @@ func_nodejs() {
 }
 
 func_java() {
-  echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create ${component} service file <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
-  cp ${component}.service   /etc/systemd/system/${component}.service &>>${log}
+
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>Install Maven <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
   yum install maven -y &>>${log}
 
@@ -56,4 +54,14 @@ func_java() {
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>load schema <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
   mysql -h mysql.devopsovsn.online -uroot -pRoboShop@1 < /app/schema/${component}.sql &>>${log}
   func_systemd
+  }
+
+  func_python() {
+    yum install python36 gcc python3-devel -y
+
+    func_apppreq
+
+    pip3.6 install -r requirements.txt
+
+    func_systemd
   }
