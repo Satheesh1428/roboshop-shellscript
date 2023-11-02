@@ -49,7 +49,7 @@ func_nodejs() {
   func_apppreq
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>download nodejs dependencies <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
   npm install &>>${log}
-  func_schema_steup
+  func_schema_setup
   func_systemd
 }
 
