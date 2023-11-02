@@ -25,19 +25,19 @@ func_systemd() {
 }
 
 func_schema_setup() {
-  if["${schema_type}" == "mongodb"]; then
-     echo  -e "\e[36m>>>>>>>>>>>>>>>>>>install mongo client <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
-     yum install mongodb-org-shell -y &>>${log}
-     echo  -e "\e[36m>>>>>>>>>>>>>>>>>>load ${component} schema <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
-     mongo --host mongodb.devopsovsn.online </app/schema/${component}.js &>>${log}
+  if[ "${schema_type}" == "mongodb" ]; then
+    echo  -e "\e[36m>>>>>>>>>>>>>>>>>>install mongo client <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
+    yum install mongodb-org-shell -y &>>${log}
+    echo  -e "\e[36m>>>>>>>>>>>>>>>>>>load ${component} schema <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
+    mongo --host mongodb.devopsovsn.online </app/schema/${component}.js &>>${log}
   fi
 
-   if["${schema_type}" == "mysql"]; then
-     echo  -e "\e[36m>>>>>>>>>>>>>>>>>>install mysql client <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
-       yum install mysql -y &>>${log}
-       echo  -e "\e[36m>>>>>>>>>>>>>>>>>>load schema <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
-       mysql -h mysql.devopsovsn.online -uroot -pRoboShop@1 < /app/schema/${component}.sql &>>${log}
-   fi
+  if["${schema_type}" == "mysql"]; then
+    echo  -e "\e[36m>>>>>>>>>>>>>>>>>>install mysql client <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
+    yum install mysql -y &>>${log}
+    echo  -e "\e[36m>>>>>>>>>>>>>>>>>>load schema <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
+    mysql -h mysql.devopsovsn.online -uroot -pRoboShop@1 < /app/schema/${component}.sql &>>${log}
+  fi
 }
 func_nodejs() {
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create mongodb repo <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
