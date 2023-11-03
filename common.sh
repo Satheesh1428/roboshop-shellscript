@@ -30,6 +30,7 @@ func_schema_setup() {
     yum install mongodb-org-shell -y &>>${log}
     echo  -e "\e[36m>>>>>>>>>>>>>>>>>>load ${component} schema <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
     mongo --host mongodb.devopsovsn.online </app/schema/${component}.js &>>${log}
+    echo $?
   fi
 
   if [ "${schema_type}" == "mysql" ]; then
@@ -37,7 +38,9 @@ func_schema_setup() {
     yum install mysql -y &>>${log}
     echo  -e "\e[36m>>>>>>>>>>>>>>>>>>load schema <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
     mysql -h mysql.devopsovsn.online -uroot -pRoboShop@1 < /app/schema/${component}.sql &>>${log}
+    echo $?
   fi
+
 }
 func_nodejs() {
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create mongodb repo <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
@@ -46,9 +49,11 @@ func_nodejs() {
   curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>${log}
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>install nodejs  <<<<<<<<<<<<<\e[0m"  | tee  -a ${log}
   yum install nodejs -y &>>${log}
+  echo $?
   func_apppreq
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>download nodejs dependencies <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
   npm install &>>${log}
+  echo $?
   func_schema_setup
   func_systemd
 }
@@ -57,7 +62,7 @@ func_java() {
 
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>Install Maven <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
   yum install maven -y &>>${log}
-
+  echo $?
   func_apppreq
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>Build ${component} service <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
   mvn clean package &>>${log}
@@ -72,6 +77,7 @@ func_java() {
     func_apppreq
 
     pip3.6 install -r requirements.txt
+    echo $?
 
     func_systemd
   }
