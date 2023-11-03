@@ -1,4 +1,4 @@
-mysql_root_password = $1
+mysql_root_password=$1
 if [ -z "${mysql_root_password}"  ]; then
     echo  -e "\e[36m input password is missing \e[0m"
     exit 1
