@@ -2,17 +2,53 @@ log=/tmp/roboshop.log
 func_apppreq() {
     echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create ${component} service file <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
     cp ${component}.service   /etc/systemd/system/${component}.service &>>${log}
+
+  if [$? -eq 0] ; then
+      echo  -e "\e[32m success \e[0m"
+    else
+      echo  -e "\e[31m unsuccess \e[0m"
+  fi
     echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create application user <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
     useradd roboshop &>>${log}
+
+  if [$? -eq 0] ; then
+      echo  -e "\e[32m success \e[0m"
+    else
+      echo  -e "\e[31m unsuccess \e[0m"
+  fi
     echo  -e "\e[36m>>>>>>>>>>>>>>>>>>clean up existing application content <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
     rm -rf /app &>>${log}
+
+  if [$? -eq 0] ; then
+      echo  -e "\e[32m success \e[0m"
+    else
+      echo  -e "\e[31m unsuccess \e[0m"
+  fi
     echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create application directory <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
     mkdir /app &>>${log}
+
+  if [$? -eq 0] ; then
+      echo  -e "\e[32m success \e[0m"
+    else
+      echo  -e "\e[31m unsuccess \e[0m"
+  fi
     echo  -e "\e[36m>>>>>>>>>>>>>>>>>>download application content  <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
     curl -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}.zip &>>${log}
+
+  if [$? -eq 0] ; then
+      echo  -e "\e[32m success \e[0m"
+    else
+      echo  -e "\e[31m unsuccess \e[0m"
+  fi
     echo  -e "\e[36m>>>>>>>>>>>>>>>>>>extract application content <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
     cd /app
     unzip /tmp/${component}.zip &>>${log}
+
+  if [$? -eq 0] ; then
+      echo  -e "\e[32m success \e[0m"
+    else
+      echo  -e "\e[31m unsuccess \e[0m"
+  fi
     cd /app
 }
 
@@ -22,6 +58,12 @@ func_systemd() {
     systemctl daemon-reload &>>${log}
     systemctl enable ${component} &>>${log}
     systemctl restart ${component} &>>${log}
+
+  if [$? -eq 0] ; then
+      echo  -e "\e[32m success \e[0m"
+    else
+      echo  -e "\e[31m unsuccess \e[0m"
+  fi
 }
 
 func_schema_setup() {
@@ -30,7 +72,12 @@ func_schema_setup() {
     yum install mongodb-org-shell -y &>>${log}
     echo  -e "\e[36m>>>>>>>>>>>>>>>>>>load ${component} schema <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
     mongo --host mongodb.devopsovsn.online </app/schema/${component}.js &>>${log}
-    echo $?
+
+    if [$? -eq 0] ; then
+       echo  -e "\e[32m success \e[0m"
+    else
+       echo  -e "\e[31m unsuccess \e[0m"
+    fi
   fi
 
   if [ "${schema_type}" == "mysql" ]; then
@@ -38,22 +85,47 @@ func_schema_setup() {
     yum install mysql -y &>>${log}
     echo  -e "\e[36m>>>>>>>>>>>>>>>>>>load schema <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
     mysql -h mysql.devopsovsn.online -uroot -pRoboShop@1 < /app/schema/${component}.sql &>>${log}
-    echo $?
+
+    if [$? -eq 0] ; then
+        echo  -e "\e[32m success \e[0m"
+    else
+        echo  -e "\e[31m unsuccess \e[0m"
+    fi
   fi
 
 }
 func_nodejs() {
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>create mongodb repo <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
   cp mongo.repo   /etc/yum.repos.d/mongo.repo &>>${log}
+  if [$? -eq 0] ; then
+    echo  -e "\e[32m success \e[0m"
+  else
+    echo  -e "\e[31m unsuccess \e[0m"
+  fi
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>install nodejs repos <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
   curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>${log}
+  if [$? -eq 0] ; then
+      echo  -e "\e[32m success \e[0m"
+    else
+      echo  -e "\e[31m unsuccess \e[0m"
+  fi
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>install nodejs  <<<<<<<<<<<<<\e[0m"  | tee  -a ${log}
   yum install nodejs -y &>>${log}
-  echo $?
+
+  if [$? -eq 0] ; then
+      echo  -e "\e[32m success \e[0m"
+    else
+      echo  -e "\e[31m unsuccess \e[0m"
+  fi
   func_apppreq
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>download nodejs dependencies <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
   npm install &>>${log}
-  echo $?
+
+  if [$? -eq 0] ; then
+      echo  -e "\e[32m success \e[0m"
+    else
+      echo  -e "\e[31m unsuccess \e[0m"
+  fi
   func_schema_setup
   func_systemd
 }
@@ -62,11 +134,28 @@ func_java() {
 
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>Install Maven <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
   yum install maven -y &>>${log}
-  echo $?
+
+  if [$? -eq 0] ; then
+      echo  -e "\e[32m success \e[0m"
+    else
+      echo  -e "\e[31m unsuccess \e[0m"
+  fi
   func_apppreq
   echo  -e "\e[36m>>>>>>>>>>>>>>>>>>Build ${component} service <<<<<<<<<<<<<\e[0m" | tee  -a ${log}
   mvn clean package &>>${log}
+
+  if [$? -eq 0] ; then
+      echo  -e "\e[32m success \e[0m"
+    else
+      echo  -e "\e[31m unsuccess \e[0m"
+  fi
   mv target/${component}-1.0.jar ${component}.jar &>>${log}
+
+  if [$? -eq 0] ; then
+      echo  -e "\e[32m success \e[0m"
+    else
+      echo  -e "\e[31m unsuccess \e[0m"
+  fi
   func_schema_setup
   func_systemd
   }
@@ -74,10 +163,20 @@ func_java() {
   func_python() {
     yum install python36 gcc python3-devel -y
 
+  if [$? -eq 0] ; then
+      echo  -e "\e[32m success \e[0m"
+    else
+      echo  -e "\e[31m unsuccess \e[0m"
+  fi
     func_apppreq
 
     pip3.6 install -r requirements.txt
-    echo $?
+
+  if [$? -eq 0] ; then
+      echo  -e "\e[32m success \e[0m"
+    else
+      echo  -e "\e[31m unsuccess \e[0m"
+  fi
 
     func_systemd
   }
