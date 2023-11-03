@@ -96,6 +96,7 @@ func_java() {
     yum install python36 gcc python3-devel -y
     func_exit_status
     func_apppreq
+    sed -i "$/rabbitmq_app_password/${rabbitmq_app_password}/" /etc/systemd/system/${component}.service
     pip3.6 install -r requirements.txt
     func_exit_status
     func_systemd
